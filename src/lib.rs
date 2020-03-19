@@ -1,3 +1,4 @@
+#![feature(test)]
 extern crate regex;
 extern crate crypto;
 
@@ -28,4 +29,23 @@ pub fn checksum(address: &str) -> String {
     }
 
     return checksum_address;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    extern crate test;
+    use self::test::Bencher;
+
+    #[bench]
+    fn bench_checksum(b: &mut Bencher) {
+        b.iter(|| {
+            let address = test::black_box("0xe0fc04fa2d34a66b779fd5cee748268032a146c0");
+
+            for _ in 0..20_000 {
+                checksum(address);
+            }
+        })
+    }
 }
